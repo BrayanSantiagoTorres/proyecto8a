@@ -1,21 +1,63 @@
 import { StyleSheet, View } from 'react-native'
 import React, {useState} from 'react'
 import { Input, Icon, Button } from 'react-native-elements'
-import { useNavigation } from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
+import { validateEmail } from '../../utils/validation'
+import firebase from 'firebase'
 
-export default function LoginForm() {
+export default function LoginForm(props) {
+    const {toastRef} = props
     const [showPassword, setShowPassword] = useState(false)
     const [formData, setFormData] = useState(defaultFormValues())
-
     const navigation = useNavigation()
 
+    const onSubmit = () => {
+        if(formData.email.length===0||formData.password.length===0){
+            toastRef.current.show({
+                type: 'error',
+                position: 'top',
+                text1: 'Empty',
+                text2: 'Todos los campos son requeridos',
+                visibilityTime: 3000,
+              });
+        } else if (!validateEmail(formData.email)){
+            toastRef.current.show({
+                type: 'error',
+                position: 'top',
+                text1: 'Password',
+                text2: 'El email no es correcto',
+                visibilityTime: 3000,
+              });
+        } else if (formData.password.length < 6){
+            toastRef.current.show({
+                type: 'error',
+                position: 'top',
+                text1: 'Password',
+                text2: 'El password debe tener almenos 6 carácteres',
+                visibilityTime: 3000,
+              }); 
+        } else{
+            firebase
+                .auth()
+                .signInWithEmailAndPassword(formData.email, formData.password)
+                .then(()=>{
+                    navigation.navigate('Cuenta')
+                })
+                .catch(()=>{
+                    toastRef.current.show({
+                        type: 'error',
+                        position: 'top',
+                        text1: 'Cuenta',
+                        text2: 'Las credenciales no son correctas',
+                        visibilityTime: 3000,
+                      });
+                })
+        }
+    }
+    
     const onChange = (e, type) => {
         setFormData({...formData,[type]: e.nativeEvent.text})
      }
-
-    const doLogin = ()=>{
-        console.log('Login')
-    }
 
   return (
     <View style={styles.container}>
@@ -42,7 +84,7 @@ export default function LoginForm() {
                 title='Iniciar Sesión'
                 containerStyle={styles.btnContainerRegister}
                 buttonStyle={styles.btnRegister}
-                onPress={()=>doLogin()}
+                onPress={()=>onSubmit()}
             />
     </View>
   )
