@@ -17,7 +17,7 @@ export default function UserLogged(){
     },[])
     return(
         <View style={styles.viewUserInfo} >
-            {userInfo&&<InfoUser userInfo={userInfo}/>}
+            {userInfo&&<InfoUser userInfo={userInfo} toastRef={toastRef}/>}
             <Text>AccountOptions...</Text>
             <Button 
                 title='Cerrar Sesión'
@@ -40,13 +40,13 @@ const styles = StyleSheet.create({
         borderRadius: 0,
         backgroundColor: '#00a680',
         borderTopWidth: 1,
-        borderTopColor: '#e3e3e3',
+        borderTopColor: '#00a680',
         borderBottomWidth: 1,
-        borderBottomColor: '#e3e3e3',
+        borderBottomColor: '#00a680',
         paddingTop: 10,
         paddingBottom: 10
     },
     btnCloseSessionText:{
-        color: '#fff'
+        color: '#E4F6FC'
     }
 })
