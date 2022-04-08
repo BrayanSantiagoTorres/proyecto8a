@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     text:{
         color: '#00a680',
         textTransform: 'uppercase',
-        marginTop: 10
+        marginTop: 10,
+        textAlign: 'center'
     }
 })
